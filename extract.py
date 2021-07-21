@@ -1,4 +1,5 @@
 import mailbox, sys
+import hashlib
 
 def showMbox(mboxPath):
 	box = mailbox.mbox(mboxPath)
@@ -23,6 +24,14 @@ def showPayload(msg):
             div = '------------------------------'
     else:
         print(msg.get_content_type())
-        print(payload[:200])
+        if msg.get_content_type() in ('text/plain', 'text/html'):
+            print(payload[:10])
+        else:
+            #print(msg.keys())
+            print('ct : ' + str(msg.get_all('Content-Type')))
+            #print('cd : ' + str(msg.get_all('Content-Disposition')))
+            #print(msg['Content-ID'])
+            print(hashlib.sha512(payload.encode('utf8')).hexdigest())
+        #print(payload[:])
 
 showMbox(sys.argv[1])
